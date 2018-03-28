@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,58 +24,82 @@ public class AInversusAgent : Agent {
 
   public override void CollectObservations() {
 
-    
     float[] cells = player.Grid.GetCellsFloat(player.HomeState);
-    AddVectorObs(player.Location.x / player.Grid.Cols);
+    /*AddVectorObs(player.Location.x / player.Grid.Cols);
     AddVectorObs(player.Location.y / player.Grid.Rows);
     AddVectorObs(player.Opponent.location.x / player.Grid.Cols);
     AddVectorObs(player.Opponent.location.y / player.Grid.Rows);
-    AddVectorObs(cells);
-    
+    AddVectorObs(cells);*/
+
+    float[] playerPositions = new float[cells.Length];
+    float[] bulletPositions = new float[cells.Length];
+
+    float[] observations = new float[cells.Length];
+
+    for(int i = 0; i < cells.Length; i++) {
+
+      observations[i] = cells[i];
+    }
 
 
     for (int i = 0; i < player.MaxBullets; i++) {
-      if (player.bullets.Count <= i || player.bullets[i] == null) {
-        AddVectorObs(player.Location.x / player.Grid.Cols); //Position
-        AddVectorObs(player.Location.y / player.Grid.Rows);
-        AddVectorObs(0); //Direction
-        AddVectorObs(0);
-      }
-      else {
-        Vector2 c = player.bullets[i].GetCurrentCell();
-        AddVectorObs(c.x / player.Grid.Cols); //Position
+      if (player.bullets.Count > i && player.bullets[i] != null) {
+        /* AddVectorObs(c.x / player.Grid.Cols); //Position
         AddVectorObs(c.y / player.Grid.Rows);
         AddVectorObs(player.bullets[i].direction.x); //Direction
-        AddVectorObs(player.bullets[i].direction.y);
+        AddVectorObs(player.bullets[i].direction.y); */
+
+        Vector2 c = player.bullets[i].GetCurrentCell();
+        observations[(int)(c.x * player.Grid.Rows + c.y)] = 4;
       }
     }
 
     for (int i = 0; i < player.opponent.MaxBullets; i++) {
-      if (player.opponent.bullets.Count <= i || player.opponent.bullets[i] == null) {
-        AddVectorObs(player.opponent.Location.x / player.Grid.Cols); //Position
-        AddVectorObs(player.opponent.Location.y / player.Grid.Rows);
-        AddVectorObs(0); //Direction
-        AddVectorObs(0);
-      }
-      else {
-        Vector2 c = player.opponent.bullets[i].GetCurrentCell();
-        AddVectorObs(c.x / player.Grid.Cols); //Position
+      if (player.opponent.bullets.Count > i && player.opponent.bullets[i] != null) {
+        /* AddVectorObs(c.x / player.Grid.Cols); //Position
         AddVectorObs(c.y / player.Grid.Rows);
         AddVectorObs(player.opponent.bullets[i].direction.x); //Direction
         AddVectorObs(player.opponent.bullets[i].direction.y);
+        */
+
+        Vector2 c = player.opponent.bullets[i].GetCurrentCell();
+        observations[(int)(c.x * player.Grid.Rows + c.y)] = 8;
       }
     }
+
+
+    observations[(int)(player.Location.x * player.Grid.Rows + player.Location.y)] = 5;
+    observations[(int)(player.opponent.Location.x * player.Grid.Rows + player.opponent.Location.y)] = 9;
+
+    AddVectorObs(observations);
+
+    WriteInFile(observations);
+  }
+
+
+
+  void WriteInFile(float[] observations) {
+    StreamWriter writer = new StreamWriter("observations.txt", true);
+
+    for(int i = 0; i < observations.Length; i++) {
+      if (i != 0 && i % (player.Grid.Rows) == 0)
+        writer.WriteLine();
+      writer.Write(observations[i]);
+
+    }
+    writer.WriteLine();
+    writer.Close();
   }
 
   public override void AgentAction(float[] vectorAction, string textAction) {
 
     //Rewards
-    //AddReward(-0.1f);
+    AddReward(-0.1f);
     episodeTime += 1;
 
     if(!player.Alive) {
       Done();
-      AddReward(-1f);
+      AddReward(-3f);
     }
 
     if(!player.Opponent.Alive) {
@@ -87,7 +112,7 @@ public class AInversusAgent : Agent {
     float diffY = Mathf.Abs(player.location.y - player.opponent.location.x);
 
     if(diffX < 2 && diffY < 2) {
-      AddReward(0.1f);
+      //AddReward(0.1f);
     }
 
     //Rewards for stage control
@@ -117,15 +142,28 @@ public class AInversusAgent : Agent {
         break;
       case 4:
         actionSucceeded = player.ShootUp();
+
+        if (actionSucceeded && player.opponent.location.y < player.location.y) {
+          AddReward(0.1f);
+        }
         break;
       case 5:
         actionSucceeded = player.ShootDown();
+        if (actionSucceeded && player.opponent.location.y > player.location.y) {
+          AddReward(0.1f);
+        }
         break;
       case 6:
         actionSucceeded = player.ShootLeft();
+        if (actionSucceeded && player.opponent.location.x < player.location.x) {
+          AddReward(0.1f);
+        }
         break;
       case 7:
         actionSucceeded = player.ShootRight();
+        if (actionSucceeded && player.opponent.location.x > player.location.x) {
+          AddReward(0.1f);
+        }
         break;
       default:
         AddReward(-0.1f);

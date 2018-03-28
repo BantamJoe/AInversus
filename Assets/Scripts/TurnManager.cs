@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TurnManager : MonoBehaviour {
-
+  
   public RandomActions RandomPlayer;
   public Player AIPlayer;
+
+  public bool UseRandomOpponent = true;
 
 	// Use this for initialization
 	void Start () {
@@ -18,10 +21,16 @@ public class TurnManager : MonoBehaviour {
     while(true) {
 
       AIPlayer.GetComponent<AInversusAgent>().RequestDecision();
-      RandomPlayer.DoAction();
+
+      if(UseRandomOpponent)
+        RandomPlayer.DoAction();
 
       yield return new WaitForSeconds(0.2f);
     }
 
+  }
+
+  private void OnGUI() {
+    Time.timeScale = GUI.HorizontalSlider(new Rect(5, 10, 80, 10), Time.timeScale, 1, 100);
   }
 }

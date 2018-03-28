@@ -5,6 +5,9 @@ using UnityEngine;
 public class CellGrid : MonoBehaviour {
 
   [SerializeField]
+  Camera observingCamera;
+
+  [SerializeField]
   int rows = 5, cols = 5;
 
   public int Cols {
@@ -47,9 +50,9 @@ public class CellGrid : MonoBehaviour {
     }
 
     if(cols * 9 > rows * 16)
-      Camera.main.orthographicSize = (cols + padding) / 2f / Camera.main.aspect;
+      observingCamera.orthographicSize = cols / 2f / Camera.main.aspect;
     else
-      Camera.main.orthographicSize = (rows + padding) / 2f;
+      observingCamera.orthographicSize = rows / 2f;
   }
 
   public void ReInitialize() {

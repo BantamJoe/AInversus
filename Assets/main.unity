@@ -113,38 +113,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!114 &176848949
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 41e9bda8f3cf1492fa74926a530f6f70, type: 3}
-  m_Name: (Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
-  m_EditorClassIdentifier: 
-  broadcast: 1
-  continuousPlayerActions: []
-  discretePlayerActions:
-  - key: 273
-    value: 0
-  - key: 274
-    value: 1
-  - key: 276
-    value: 2
-  - key: 275
-    value: 3
-  - key: 119
-    value: 4
-  - key: 115
-    value: 5
-  - key: 97
-    value: 6
-  - key: 100
-    value: 7
-  defaultAction: 9
-  brain: {fileID: 1332951469}
 --- !u!1 &331631968
 GameObject:
   m_ObjectHideFlags: 0
@@ -493,7 +461,7 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9a7e367516c66fb4c9600fb35b8c3048, type: 2}
   m_IsPrefabParent: 0
---- !u!114 &503521562
+--- !u!114 &596059928
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -501,10 +469,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 943466ab374444748a364f9d6c3e2fe2, type: 3}
-  m_Name: (Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_Script: {fileID: 11500000, guid: 8b23992c8eb17439887f5e944bf04a40, type: 3}
+  m_Name: (Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
   m_EditorClassIdentifier: 
   broadcast: 1
+  graphModel: {fileID: 0}
+  graphScope: 
+  graphPlaceholders: []
+  BatchSizePlaceholderName: batch_size
+  VectorObservationPlacholderName: vector_observation
+  RecurrentInPlaceholderName: recurrent_in
+  RecurrentOutPlaceholderName: recurrent_out
+  VisualObservationPlaceholderName: []
+  ActionPlaceholderName: action
+  PreviousActionPlaceholderName: prev_action
   brain: {fileID: 1332951469}
 --- !u!1 &737039037
 GameObject:
@@ -537,7 +515,7 @@ MonoBehaviour:
   bullets: []
   location: {x: 8, y: 3}
   opponent: {fileID: 1372845819}
-  bullet: {fileID: 1767091445746240, guid: 4c3c6fc379d43c841a5d007253f7ca1d, type: 2}
+  bullet: {fileID: 1308951490164262, guid: a39345accb3977044a411a877a6e9dbe, type: 2}
 --- !u!4 &737039039
 Transform:
   m_ObjectHideFlags: 0
@@ -581,11 +559,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSteps: 0
   trainingConfiguration:
-    width: 720
-    height: 480
-    qualityLevel: 1
-    timeScale: 100
-    targetFrameRate: -1
+    width: 480
+    height: 360
+    qualityLevel: 0
+    timeScale: 1
+    targetFrameRate: 60
   inferenceConfiguration:
     width: 1280
     height: 720
@@ -648,9 +626,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a749c9e0d5ca2ee4da4cb0219057e498, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  observingCamera: {fileID: 1412294490}
   rows: 7
   cols: 12
   cell: {fileID: 1753920968266462, guid: 9a7e367516c66fb4c9600fb35b8c3048, type: 2}
+--- !u!114 &1320880783
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41e9bda8f3cf1492fa74926a530f6f70, type: 3}
+  m_Name: (Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: 
+  broadcast: 1
+  continuousPlayerActions: []
+  discretePlayerActions:
+  - key: 273
+    value: 0
+  - key: 274
+    value: 1
+  - key: 276
+    value: 2
+  - key: 275
+    value: 3
+  - key: 119
+    value: 4
+  - key: 115
+    value: 5
+  - key: 97
+    value: 6
+  - key: 100
+    value: 7
+  defaultAction: 9
+  brain: {fileID: 1332951469}
 --- !u!1 &1332951467
 GameObject:
   m_ObjectHideFlags: 0
@@ -692,7 +703,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   brainParameters:
-    vectorObservationSize: 96
+    vectorObservationSize: 84
     numStackedVectorObservations: 1
     vectorActionSize: 8
     cameraResolutions: []
@@ -707,13 +718,13 @@ MonoBehaviour:
     - ShootRight
     vectorActionSpaceType: 0
     vectorObservationSpaceType: 1
-  brainType: 2
+  brainType: 0
   CoreBrains:
-  - {fileID: 176848949}
-  - {fileID: 503521562}
-  - {fileID: 2066125489}
-  - {fileID: 1812288435}
-  instanceID: 17792
+  - {fileID: 1320880783}
+  - {fileID: 1845517801}
+  - {fileID: 2070621101}
+  - {fileID: 596059928}
+  instanceID: 15718
 --- !u!1 &1372845816
 GameObject:
   m_ObjectHideFlags: 0
@@ -778,7 +789,7 @@ MonoBehaviour:
   bullets: []
   location: {x: 1, y: 1}
   opponent: {fileID: 737039038}
-  bullet: {fileID: 1767091445746240, guid: 4c3c6fc379d43c841a5d007253f7ca1d, type: 2}
+  bullet: {fileID: 1016143933179462, guid: 8d11128c77509d2449859641d958bf98, type: 2}
 --- !u!1 &1412294487
 GameObject:
   m_ObjectHideFlags: 0
@@ -858,7 +869,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1676593933
 GameObject:
@@ -889,6 +900,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   RandomPlayer: {fileID: 331631969}
   AIPlayer: {fileID: 1372845819}
+  UseRandomOpponent: 0
 --- !u!4 &1676593935
 Transform:
   m_ObjectHideFlags: 0
@@ -902,7 +914,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1812288435
+--- !u!114 &1845517801
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -910,20 +922,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b23992c8eb17439887f5e944bf04a40, type: 3}
-  m_Name: (Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_Script: {fileID: 11500000, guid: 943466ab374444748a364f9d6c3e2fe2, type: 3}
+  m_Name: (Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
   m_EditorClassIdentifier: 
   broadcast: 1
-  graphModel: {fileID: 0}
-  graphScope: 
-  graphPlaceholders: []
-  BatchSizePlaceholderName: batch_size
-  VectorObservationPlacholderName: vector_observation
-  RecurrentInPlaceholderName: recurrent_in
-  RecurrentOutPlaceholderName: recurrent_out
-  VisualObservationPlaceholderName: []
-  ActionPlaceholderName: action
-  PreviousActionPlaceholderName: prev_action
   brain: {fileID: 1332951469}
 --- !u!1 &1889516294
 GameObject:
@@ -1178,7 +1180,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2057731365
 GameObject:
@@ -1245,7 +1247,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!114 &2066125489
+--- !u!114 &2070621101
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -1254,6 +1256,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 35813a1be64e144f887d7d5f15b963fa, type: 3}
-  m_Name: (Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
+  m_Name: (Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)(Clone)
   m_EditorClassIdentifier: 
   brain: {fileID: 1332951469}
