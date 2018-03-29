@@ -7,6 +7,7 @@ public class TurnManager : MonoBehaviour {
   
   public RandomActions RandomPlayer;
   public Player AIPlayer;
+  public Player AIOpponent;
 
   public bool UseRandomOpponent = true;
 
@@ -22,8 +23,10 @@ public class TurnManager : MonoBehaviour {
 
       AIPlayer.GetComponent<AInversusAgent>().RequestDecision();
 
-      if(UseRandomOpponent)
+      if (UseRandomOpponent)
         RandomPlayer.DoAction();
+      else
+        AIOpponent.GetComponent<AInversusAgent>().RequestDecision();
 
       yield return new WaitForSeconds(0.2f);
     }

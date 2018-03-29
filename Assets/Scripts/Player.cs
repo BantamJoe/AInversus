@@ -15,6 +15,7 @@ public class Player : MonoBehaviour {
   public Vector2 location;
   Vector2 initLocation;
 
+  [SerializeField]
   CellState homeState;
 
   bool alive = true;
@@ -49,13 +50,8 @@ public class Player : MonoBehaviour {
 
   // Use this for initialization
   void Start() {
-
-
-    homeState = grid.GetCell((int)location.x, (int)location.y);
-    initLocation = location;
-    SetLocation(location);
     bullets = new List<Bullet>();
-
+    PlayerReset();
   }
 
   public void PlayerReset() {
@@ -66,10 +62,16 @@ public class Player : MonoBehaviour {
     bullets.Clear();
     transform.GetChild(0).gameObject.SetActive(true);
 
-    if(homeState == CellState.White) 
-      SetLocation(new Vector2(Random.Range(0 + 1, grid.Cols / 2 - 1), Random.Range(0 + 1, grid.Rows - 1)));
-    else if(homeState == CellState.Black)
-      SetLocation(new Vector2(Random.Range(grid.Cols / 2 + 1, grid.Cols - 1), Random.Range(0 + 1, grid.Rows - 1)));
+    int x = 0;
+    int y = 0;
+    do {
+
+      x = Random.Range(0, Grid.Cols);
+      y = Random.Range(0, Grid.Rows);
+
+    } while (grid.GetCell(x, y) != homeState);
+
+    SetLocation(new Vector2(x, y));
     alive = true;
   }
 

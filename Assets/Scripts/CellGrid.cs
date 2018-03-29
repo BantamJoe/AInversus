@@ -33,6 +33,8 @@ public class CellGrid : MonoBehaviour {
 
   void Initialize() {
 
+    int whiteCount = Cols * Rows / 2;
+
     cells = new CellState[cols, rows];
     cellObjects = new Cell[cols, rows];
 
@@ -44,22 +46,44 @@ public class CellGrid : MonoBehaviour {
         newCell.transform.localPosition = upLeft + Vector3.right * x + Vector3.down * y;
         cellObjects[x,y] = newCell.GetComponent<Cell>();
 
-        cells[x,y] = x < (cols / 2f) ? CellState.White : CellState.Black;
+        cells[x,y] = CellState.Black;
         cellObjects[x,y].initialState = cells[x,y];
       }
     }
 
-    if(cols * 9 > rows * 16)
-      observingCamera.orthographicSize = cols / 2f / Camera.main.aspect;
+    while(whiteCount > 0) {
+      int x = Random.Range(0, Cols);
+      int y = Random.Range(0, Rows);
+
+      if(cells[x,y] == CellState.Black) {
+        whiteCount--;
+        cells[x, y] = CellState.White;
+      }
+    }
+
+    if(cols > rows * Camera.main.aspect)
+      observingCamera.orthographicSize = (cols / 2f + padding) / Camera.main.aspect;
     else
-      observingCamera.orthographicSize = rows / 2f;
+      observingCamera.orthographicSize = (rows / 2f + padding);
   }
 
   public void ReInitialize() {
 
     for (int y = 0; y < rows; y++) {
       for (int x = 0; x < cols; x++) {
-        cells[x, y] = x < (cols / 2f) ? CellState.White : CellState.Black;
+        cells[x, y] = CellState.Black;
+        cellObjects[x, y].SetStateInstant(cells[x, y]);
+      }
+    }
+
+    int whiteCount = Cols * Rows / 2;
+    while (whiteCount > 0) {
+      int x = Random.Range(0, Cols);
+      int y = Random.Range(0, Rows);
+
+      if (cells[x, y] == CellState.Black) {
+        whiteCount--;
+        cells[x, y] = CellState.White;
         cellObjects[x, y].SetStateInstant(cells[x, y]);
       }
     }

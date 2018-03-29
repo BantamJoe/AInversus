@@ -24,6 +24,31 @@ public class AInversusAgent : Agent {
 
   public override void CollectObservations() {
 
+    AddVectorObs(new Vector2(player.opponent.location.x - player.location.x, player.opponent.location.y - player.location.y));
+    AddVectorObs(GetOpponentBulletPosition());
+    AddVectorObs(new float[] { CellToFloat(player.location + Vector2.up), CellToFloat(player.location + Vector2.right), CellToFloat(player.location + Vector2.down), CellToFloat(player.location + Vector2.left) });
+  }
+
+  Vector2 GetOpponentBulletPosition() {
+
+    if (player.opponent.bullets.Count == 0)
+      return player.opponent.location - player.location;
+
+    return player.opponent.bullets[0].GetCurrentCell() - player.location;
+
+  }
+
+  float CellToFloat(Vector2 v) {
+
+    switch(player.Grid.GetCell((int)player.location.x, (int)player.location.y - 1)) {
+      case CellState.Black: return player.HomeState == CellState.Black ? 1 : -1;
+      case CellState.White: return player.HomeState == CellState.White ? 1 : -1;
+      default: return 0;
+    } 
+  }
+
+  void CollectObservationArray() {
+
     float[] cells = player.Grid.GetCellsFloat(player.HomeState);
     /*AddVectorObs(player.Location.x / player.Grid.Cols);
     AddVectorObs(player.Location.y / player.Grid.Rows);
@@ -36,7 +61,7 @@ public class AInversusAgent : Agent {
 
     float[] observations = new float[cells.Length];
 
-    for(int i = 0; i < cells.Length; i++) {
+    for (int i = 0; i < cells.Length; i++) {
 
       observations[i] = cells[i];
     }
@@ -73,11 +98,8 @@ public class AInversusAgent : Agent {
 
     AddVectorObs(observations);
 
-    WriteInFile(observations);
   }
-
-
-
+  
   void WriteInFile(float[] observations) {
     StreamWriter writer = new StreamWriter("observations.txt", true);
 
@@ -170,8 +192,8 @@ public class AInversusAgent : Agent {
         break;
     }
 
-    //if(!actionSucceeded) {
-      //AddReward(-0.1f);
-    //}
+    if(!actionSucceeded) {
+      AddReward(-0.3f);
+    }
   }
 }

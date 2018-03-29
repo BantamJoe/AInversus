@@ -34,6 +34,14 @@ public class Bullet : MonoBehaviour {
     } while (toCheck != current);
 
     lastCell = current;
+
+    for(int i = 0; i < player.opponent.bullets.Count; i++) {
+      if(player.opponent.bullets[i].GetCurrentCell() == GetCurrentCell()) {
+        player.opponent.bullets[i].Die();
+        Die();
+        break;
+      }
+    }
   }
 
   void CheckCell(Vector2 cell, CellState state) {
@@ -43,12 +51,16 @@ public class Bullet : MonoBehaviour {
     }
 
     if (state == CellState.Invalid) {
-      player.RemoveBullet(this);
-      Destroy(gameObject);
+      Die();
     }
     else if (state != home) {
       player.Grid.SetCell((int)cell.x, (int)cell.y, home);
     }
+  }
+
+  void Die() {
+    player.RemoveBullet(this);
+    Destroy(gameObject);
   }
 
   public Vector2 GetCurrentCell() {
